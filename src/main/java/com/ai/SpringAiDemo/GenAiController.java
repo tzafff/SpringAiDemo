@@ -17,4 +17,9 @@ public class GenAiController {
     public String getResponse(@RequestParam String prompt) {
         return chartService.getResponse(prompt);
     }
+
+    @GetMapping("ask-ai-options")
+    public String getResponseOptions(@RequestParam String prompt) {
+        return chartService.getResponseOptions(prompt);
+    }
 }
