@@ -7,10 +7,10 @@ import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ChartService {
+public class ChatService {
     private final ChatModel chatModel;
 
-    public ChartService(ChatModel chatModel) {
+    public ChatService(ChatModel chatModel) {
         this.chatModel = chatModel;
     }
 

@@ -12,22 +12,24 @@ import java.util.List;
 @RestController
 public class GenAiController {
 
-    private final ChartService chartService;
+    private final ChatService chatService;
     private final ImageService imageService;
+    private final RecipeService recipeService;
 
-    public GenAiController(ChartService chartService, ImageService imageService) {
-        this.chartService = chartService;
+    public GenAiController(ChatService chatService, ImageService imageService, RecipeService recipeService) {
+        this.chatService = chatService;
         this.imageService = imageService;
+        this.recipeService = recipeService;
     }
 
     @GetMapping("ask-ai")
     public String getResponse(@RequestParam String prompt) {
-        return chartService.getResponse(prompt);
+        return chatService.getResponse(prompt);
     }
 
     @GetMapping("ask-ai-options")
     public String getResponseOptions(@RequestParam String prompt) {
-        return chartService.getResponseOptions(prompt);
+        return chatService.getResponseOptions(prompt);
     }
 
     // Note: URLs are only valid for 60 minutes after the image has been generated.
@@ -53,17 +55,26 @@ public class GenAiController {
 
     @GetMapping("generate-image-with-options")
     public List<String> generateImageWithOptions(HttpServletResponse response,
-                              @RequestParam String prompt,
-                              @RequestParam(defaultValue = "hd") String quality,
-                              @RequestParam(defaultValue = "1") int n,
-                              @RequestParam(defaultValue = "1024") int width,
-                              @RequestParam(defaultValue = "1024") int height
-                              ) throws IOException {
-        ImageResponse imageResponse = imageService.generateImageWithOptions(prompt, quality, n, width, height );
+                                                 @RequestParam String prompt,
+                                                 @RequestParam(defaultValue = "hd") String quality,
+                                                 @RequestParam(defaultValue = "1") int n,
+                                                 @RequestParam(defaultValue = "1024") int width,
+                                                 @RequestParam(defaultValue = "1024") int height
+    ) throws IOException {
+        ImageResponse imageResponse = imageService.generateImageWithOptions(prompt, quality, n, width, height);
         List<String> imageUrls = imageResponse.getResults().stream()
                 .map(result -> result.getOutput().getUrl())
                 .toList();
 
         return imageUrls;
+    }
+
+    @GetMapping("recipe-creator")
+    public String recipeCreator(
+            @RequestParam String ingredients,
+            @RequestParam(defaultValue = "any") String cuisine,
+            @RequestParam(defaultValue = "") String dietaryRestrictions
+    ) throws IOException {
+        return recipeService.createRecipe(ingredients, cuisine, dietaryRestrictions);
     }
 }
