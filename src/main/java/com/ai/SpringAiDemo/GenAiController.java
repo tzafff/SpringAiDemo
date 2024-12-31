@@ -50,4 +50,20 @@ public class GenAiController {
 
         return imageUrls;
     }
+
+    @GetMapping("generate-image-with-options")
+    public List<String> generateImageWithOptions(HttpServletResponse response,
+                              @RequestParam String prompt,
+                              @RequestParam(defaultValue = "hd") String quality,
+                              @RequestParam(defaultValue = "1") int n,
+                              @RequestParam(defaultValue = "1024") int width,
+                              @RequestParam(defaultValue = "1024") int height
+                              ) throws IOException {
+        ImageResponse imageResponse = imageService.generateImageWithOptions(prompt, quality, n, width, height );
+        List<String> imageUrls = imageResponse.getResults().stream()
+                .map(result -> result.getOutput().getUrl())
+                .toList();
+
+        return imageUrls;
+    }
 }

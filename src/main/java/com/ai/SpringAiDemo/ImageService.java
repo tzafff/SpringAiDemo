@@ -40,4 +40,20 @@ public class ImageService {
         return response;
     }
 
+
+    public ImageResponse generateImageWithOptions(String prompt, String quality, int n, int width, int height) {
+        ImageResponse response = openAiImageModel.call(
+                new ImagePrompt(prompt,
+                        OpenAiImageOptions.builder()
+                                .withModel("dall-e-2")
+                                .withQuality(quality)
+                                .withN(n)
+                                .withHeight(height)
+                                .withWidth(width)
+                                .build())
+
+        );
+        return response;
+    }
+
 }
