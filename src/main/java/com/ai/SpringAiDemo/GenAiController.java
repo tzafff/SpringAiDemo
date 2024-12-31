@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 public class GenAiController {
@@ -29,10 +30,24 @@ public class GenAiController {
         return chartService.getResponseOptions(prompt);
     }
 
+    // Note: URLs are only valid for 60 minutes after the image has been generated.
+
     @GetMapping("generate-image")
-    public void generateImages(HttpServletResponse response, @RequestParam String prompt) throws IOException {
+    public void generateImage(HttpServletResponse response, @RequestParam String prompt) throws IOException {
         ImageResponse imageResponse = imageService.generateImage(prompt);
         String imageUrl = imageResponse.getResult().getOutput().getUrl();
         response.sendRedirect(imageUrl);
+    }
+
+    @GetMapping("generate-multiple-image")
+    public List<String> generateMultipleImages(HttpServletResponse response, @RequestParam String prompt) throws IOException {
+        ImageResponse imageResponse = imageService.generateMultipleImage(prompt);
+
+        // Streams to get urls from imageResponse
+        List<String> imageUrls = imageResponse.getResults().stream()
+                .map(result -> result.getOutput().getUrl())
+                .toList();
+
+        return imageUrls;
     }
 }

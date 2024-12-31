@@ -26,4 +26,18 @@ public class ImageService {
         return response;
     }
 
+    public ImageResponse generateMultipleImage(String prompt) {
+        ImageResponse response = openAiImageModel.call(
+                new ImagePrompt(prompt,
+                        OpenAiImageOptions.builder()
+                                .withModel("dall-e-2")
+                                .withN(2)
+                                .withHeight(1024)
+                                .withWidth(1024)
+                                .build())
+
+        );
+        return response;
+    }
+
 }
