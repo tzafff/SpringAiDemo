@@ -22,6 +22,11 @@ public class GenAiController {
         this.recipeService = recipeService;
     }
 
+    @GetMapping("hello")
+    public String hello() {
+        return "Hello";
+    }
+
     @GetMapping("ask-ai")
     public String getResponse(@RequestParam String prompt) {
         return chatService.getResponse(prompt);
